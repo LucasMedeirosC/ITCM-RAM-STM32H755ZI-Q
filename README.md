@@ -1,25 +1,25 @@
-# Transferencia de funcoes para ITCM (STM32H755 CM7)
+# Transferência de funções para ITCM (STM32H755 CM7)
 
-Este documento descreve, em ordem, os passos aplicados no projeto para executar funcoes criticas na ITCM (Instruction TCM) em vez de executar diretamente da FLASH.
+Este documento descreve, em ordem, os passos aplicados no projeto para executar funções críticas na ITCM (Instruction TCM), em vez de executar diretamente da FLASH.
 
 ## 1. Objetivo
 
-- Reduzir latencia de execucao de funcoes matematicas no CM7.
-- Copiar codigo marcado para uma secao dedicada em ITCM durante o boot.
+- Reduzir latência de execução de funções matemáticas no CM7.
+- Copiar código marcado para uma seção dedicada em ITCM durante o boot.
 - Medir ganho de desempenho em ciclos de CPU.
 
 ## 2. Conceito usado
 
-No linker, a secao de codigo da ITCM foi configurada com:
+No linker, a seção de código da ITCM foi configurada com:
 
-- VMA (endereco de execucao): ITCMRAM
-- LMA (endereco de carga): FLASH
+- VMA (endereço de execução): ITCMRAM
+- LMA (endereço de carga): FLASH
 
 Ou seja:
 
-1. O binario dessas funcoes fica armazenado na FLASH.
-2. No inicio da execucao, o firmware copia esse bloco para a ITCM.
-3. A CPU passa a executar essas funcoes a partir do endereco ITCM.
+1. O binário dessas funções fica armazenado na FLASH.
+2. No início da execução, o firmware copia esse bloco para a ITCM.
+3. A CPU passa a executar essas funções a partir do endereço ITCM.
 
 ## 3. Ajuste do linker do CM7
 
@@ -27,7 +27,7 @@ Arquivo alterado:
 
 - CM7/STM32H755ZITX_FLASH.ld
 
-Antes de criar a secao `.itcm_text`, foi necessario garantir que a regiao ITCM existisse no bloco `MEMORY` do linker:
+Antes de criar a seção `.itcm_text`, foi necessário garantir que a região ITCM existisse no bloco `MEMORY` do linker:
 
 ```ld
 /* Memories definition */
@@ -42,9 +42,9 @@ MEMORY
 }
 ```
 
-Sem essa entrada `ITCMRAM`, o linker nao consegue posicionar `>ITCMRAM` e o fluxo de copia/executar da ITCM nao funciona.
+Sem essa entrada `ITCMRAM`, o linker não consegue posicionar `>ITCMRAM`, e o fluxo de copiar/executar da ITCM não funciona.
 
-Foi adicionada uma secao dedicada para funcoes ITCM:
+Foi adicionada uma seção dedicada para funções ITCM:
 
 ```ld
 .itcm_text :
@@ -60,17 +60,17 @@ Foi adicionada uma secao dedicada para funcoes ITCM:
 _sitcm_text = LOADADDR(.itcm_text);
 ```
 
-Simbolos exportados:
+Símbolos exportados:
 
-- _sitcm_text: inicio na FLASH (origem da copia)
-- _sitcm_ram: inicio na ITCM (destino da copia)
-- _eitcm_ram: fim da regiao ITCM a copiar
+- _sitcm_text: início na FLASH (origem da cópia)
+- _sitcm_ram: início na ITCM (destino da cópia)
+- _eitcm_ram: fim da região ITCM a copiar
 
-## 4. Correcao importante no layout da FLASH
+## 4. Correção importante no layout da FLASH
 
-A secao `.isr_vector` foi mantida no inicio da FLASH para nao deslocar a tabela de vetores.
+A seção `.isr_vector` foi mantida no início da FLASH para não deslocar a tabela de vetores.
 
-Isso evita falhas de excecao/trap na inicializacao.
+Isso evita falhas de exceção/trap na inicialização.
 
 ## 5. Rotina de copia FLASH -> ITCM
 
@@ -91,49 +91,49 @@ __DSB();
 __ISB();
 ```
 
-- `__DSB()` e `__ISB()` garantem consistencia antes de executar codigo recem-copiado.
+- `__DSB()` e `__ISB()` garantem consistência antes de executar código recém-copiado.
 
 ## 6. Funcoes colocadas na ITCM
 
-As funcoes foram marcadas com atributo de secao:
+As funções foram marcadas com atributo de seção:
 
 ```c
 __attribute__((section(".itcm_text")))
 ```
 
-Funcoes de execucao em ITCM:
+Funções de execução em ITCM:
 
 - wrap_to_pi
 - sin_itcm
 - cos_itcm
 
-## 7. Evolucao da estrategia matematica
+## 7. Evolução da estratégia matemática
 
-### 7.1. Primeira versao
+### 7.1. Primeira versão
 
 - `fast_sin/fast_cos` em ITCM chamando `sinf/cosf` da libm.
 - Resultado: parte do trabalho ainda ocorria na FLASH (libm).
 
-### 7.2. Segunda versao
+### 7.2. Segunda versão
 
-- Implementacao polinomial propria em ITCM (`sin_itcm/cos_itcm`).
+- Implementação polinomial própria em ITCM (`sin_itcm/cos_itcm`).
 - Eliminou salto para `sinf/cosf` em cada chamada.
 
-### 7.3. Versao atual (lookup table)
+### 7.3. Versão atual (lookup table)
 
 - LUT de seno com 1024 pontos (`sin_lut`).
 - Interpolacao linear em `sin_itcm()`.
 - `cos_itcm(x)` calculado por fase: `sin_itcm(HALF_PI_F + x)`.
 
-Observacao:
+Observação:
 
-- A LUT e preenchida uma vez no boot em `SinLut_Init()`.
-- O preenchimento usa `sinf` apenas na inicializacao.
-- Durante execucao continua, o caminho de calculo usa LUT.
+- A LUT é preenchida uma vez no boot em `SinLut_Init()`.
+- O preenchimento usa `sinf` apenas na inicialização.
+- Durante execução contínua, o caminho de cálculo usa LUT.
 
 ## 8. Benchmark por ciclos (DWT)
 
-Foi implementado benchmark de comparacao:
+Foi implementado benchmark de comparação:
 
 - `sin_itcm(x)` (ITCM)
 - `sinf(x)` (FLASH/libm)
@@ -143,31 +143,31 @@ Funcoes:
 - `DWT_CycleCounter_Init()`
 - `Benchmark_Sin_Performance()`
 
-Variaveis de resultado:
+Variáveis de resultado:
 
 - `ciclos_sin_itcm_total`
 - `ciclos_sinf_flash_total`
 - `ciclos_sin_itcm_medio`
 - `ciclos_sinf_flash_medio`
 
-## 9. Validacao no .map
+## 9. Validação no .map
 
 Arquivo:
 
 - CM7/Debug/h755_teste_CM7.map
 
-Verificacoes realizadas:
+Verificações realizadas:
 
-1. Endereco de carga da secao ITCM em FLASH (`_sitcm_text`).
-2. Endereco de execucao da secao em ITCM (`_sitcm_ram`..`_eitcm_ram`).
-3. Simbolos de funcoes em faixa ITCM (0x0000xxxx).
+1. Endereço de carga da seção ITCM em FLASH (`_sitcm_text`).
+2. Endereço de execução da seção em ITCM (`_sitcm_ram`..`_eitcm_ram`).
+3. Símbolos de funções em faixa ITCM (0x0000xxxx).
 
 ## 10. Resultado de desempenho observado
 
 Exemplo medido:
 
-- medio ITCM: 318 ciclos
-- medio FLASH: 428 ciclos
+- médio ITCM: 318 ciclos
+- médio FLASH: 428 ciclos
 
 Ganho percentual:
 
@@ -181,24 +181,24 @@ Com CM7 a 480 MHz:
 ## 11. Erros encontrados e como foram corrigidos
 
 1. Undefined reference para `_sitcm_text/_sitcm_ram/_eitcm_ram`:
-   - causa: simbolos nao definidos no linker CM7.
-   - solucao: criar secao `.itcm_text` e simbolos no linker script do CM7.
+   - causa: símbolos não definidos no linker CM7.
+   - solução: criar seção `.itcm_text` e símbolos no linker script do CM7.
 
-2. Trap/fault apos alteracao inicial do linker:
-   - causa: possivel deslocamento da `.isr_vector` do inicio da FLASH.
-   - solucao: manter `.isr_vector` no inicio e posicionar `.itcm_text` depois.
+2. Trap/fault após alteração inicial do linker:
+   - causa: possível deslocamento da `.isr_vector` do início da FLASH.
+   - solução: manter `.isr_vector` no início e posicionar `.itcm_text` depois.
 
 3. Section type conflict (`wrap_to_pi` x `sin_lut`):
-   - causa: dados (LUT) colocados na mesma secao de codigo (`.itcm_text`).
-   - solucao: manter LUT como dado normal (`static float sin_lut[...]`) fora de `.itcm_text`.
+   - causa: dados (LUT) colocados na mesma seção de código (`.itcm_text`).
+   - solução: manter LUT como dado normal (`static float sin_lut[...]`) fora de `.itcm_text`.
 
-## 12. Sequencia recomendada para repetir em outro projeto
+## 12. Sequência recomendada para repetir em outro projeto
 
 1. Definir secao `.itcm_text` no linker com `>ITCMRAM AT> FLASH`.
 2. Exportar `_sitcm_text`, `_sitcm_ram`, `_eitcm_ram`.
-3. Criar rotina de copia no boot e chamar antes de usar funcoes ITCM.
-4. Marcar funcoes-alvo com `__attribute__((section(".itcm_text")))`.
-5. Confirmar no arquivo `.map` os enderecos de carga/execucao.
+3. Criar rotina de cópia no boot e chamar antes de usar funções ITCM.
+4. Marcar funções-alvo com `__attribute__((section(".itcm_text")))`.
+5. Confirmar no arquivo `.map` os endereços de carga/execução.
 6. Medir desempenho com DWT para validar ganho real.
 
 ---
