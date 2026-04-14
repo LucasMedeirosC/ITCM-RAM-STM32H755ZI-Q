@@ -1,0 +1,10 @@
+../Core/Src/main.c:93:6:Move_Code_To_ITCM	2
+../Core/Src/main.c:109:53:wrap_to_pi	3
+../Core/Src/main.c:122:13:SinLut_Init	3
+../Core/Src/main.c:141:46:sin_itcm	3
+../Core/Src/main.c:175:46:cos_itcm	1
+../Core/Src/main.c:180:13:DWT_CycleCounter_Init	1
+../Core/Src/main.c:187:13:Benchmark_Sin_Performance	3
+../Core/Src/main.c:231:5:main	1
+../Core/Src/main.c:323:6:SystemClock_Config	4
+../Core/Src/main.c:386:6:Error_Handler	1

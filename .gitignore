@@ -1,0 +1,47 @@
+# STM32CubeIDE generated files
+/.settings
+/.vscode
+/Debug/
+/Release/
+/build/
+/*.launch
+/*.log
+/*.elf
+/*.bin
+/*.hex
+/*.map
+/*.lst
+/*.srec
+/*.d
+/*.o
+/*.a
+/*.dSYM/
+/*.dep
+/*.su
+/*.swp
+/*.bak
+/*.tmp
+
+# General C/C++ ignore patterns
+*.o
+*.obj
+*.so
+*.exe
+*.out
+*.a
+*.lib
+*.dll
+*.dylib
+*.pdb
+*.ilk
+*.idb
+*.ds_store
+*.DS_Store
+
+# Backup files
+*~
+*.bak
+*.swp
+*.tmp
+*.old
+*.orig
