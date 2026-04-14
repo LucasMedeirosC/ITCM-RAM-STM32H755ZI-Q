@@ -33,9 +33,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_line   00008a1e  00000000  00000000  00044565  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_str    00171a1a  00000000  00000000  0004cf83  2**0
+ 15 .debug_str    00171a17  00000000  00000000  0004cf83  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .comment      00000043  00000000  00000000  001be99d  2**0
+ 16 .comment      00000043  00000000  00000000  001be99a  2**0
                   CONTENTS, READONLY
  17 .debug_frame  00001a98  00000000  00000000  001be9e0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -124,13 +124,13 @@ void ExitRun0Mode(void)
   /* Wait till voltage level flag is set */
   while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
   {}
-#elif defined(USE_PWR_SMPS_2V5_SUPPLIES_LDO) && defined(SMPS)
+#elif defined(USE_PWR_DIRECT_SMPS_SUPPLY) && defined(SMPS)
   /* Exit Run* mode */
-  PWR->CR3 |= PWR_CR3_SMPSLEVEL_1 | PWR_CR3_SMPSEN | PWR_CR3_LDOEN;
+  PWR->CR3 &= ~(PWR_CR3_LDOEN);
  810030c:	4b09      	ldr	r3, [pc, #36]	@ (8100334 <ExitRun0Mode+0x2c>)
  810030e:	68db      	ldr	r3, [r3, #12]
  8100310:	4a08      	ldr	r2, [pc, #32]	@ (8100334 <ExitRun0Mode+0x2c>)
- 8100312:	f043 0326 	orr.w	r3, r3, #38	@ 0x26
+ 8100312:	f023 0302 	bic.w	r3, r3, #2
  8100316:	60d3      	str	r3, [r2, #12]
   /* Wait till voltage level flag is set */
   while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)

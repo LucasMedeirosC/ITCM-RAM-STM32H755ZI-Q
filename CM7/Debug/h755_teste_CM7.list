@@ -41,13 +41,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   00008d9f  00000000  00000000  00047aef  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    001730c6  00000000  00000000  0005088e  2**0
+ 19 .debug_str    001730c3  00000000  00000000  0005088e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  001c3954  2**0
+ 20 .comment      00000043  00000000  00000000  001c3951  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00001f2c  00000000  00000000  001c3998  2**2
+ 21 .debug_frame  00001f2c  00000000  00000000  001c3994  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 0000006a  00000000  00000000  001c58c4  2**0
+ 22 .debug_line_str 0000006a  00000000  00000000  001c58c0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .itcm_text:
@@ -736,13 +736,13 @@ void ExitRun0Mode(void)
   /* Wait till voltage level flag is set */
   while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
   {}
-#elif defined(USE_PWR_SMPS_2V5_SUPPLIES_LDO) && defined(SMPS)
+#elif defined(USE_PWR_DIRECT_SMPS_SUPPLY) && defined(SMPS)
   /* Exit Run* mode */
-  PWR->CR3 |= PWR_CR3_SMPSLEVEL_1 | PWR_CR3_SMPSEN | PWR_CR3_LDOEN;
+  PWR->CR3 &= ~(PWR_CR3_LDOEN);
  8000920:	4b09      	ldr	r3, [pc, #36]	@ (8000948 <ExitRun0Mode+0x2c>)
  8000922:	68db      	ldr	r3, [r3, #12]
  8000924:	4a08      	ldr	r2, [pc, #32]	@ (8000948 <ExitRun0Mode+0x2c>)
- 8000926:	f043 0326 	orr.w	r3, r3, #38	@ 0x26
+ 8000926:	f023 0302 	bic.w	r3, r3, #2
  800092a:	60d3      	str	r3, [r2, #12]
   /* Wait till voltage level flag is set */
   while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
@@ -1479,38 +1479,38 @@ void SystemClock_Config(void)
 
   /** Supply configuration update enable
   */
-  HAL_PWREx_ConfigSupply(PWR_SMPS_2V5_SUPPLIES_LDO);
- 8000e10:	2026      	movs	r0, #38	@ 0x26
+  HAL_PWREx_ConfigSupply(PWR_DIRECT_SMPS_SUPPLY);
+ 8000e10:	2004      	movs	r0, #4
  8000e12:	f000 fc45 	bl	80016a0 <HAL_PWREx_ConfigSupply>
 
   /** Configure the main internal regulator output voltage
   */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
  8000e16:	2300      	movs	r3, #0
  8000e18:	603b      	str	r3, [r7, #0]
  8000e1a:	4b31      	ldr	r3, [pc, #196]	@ (8000ee0 <SystemClock_Config+0xf0>)
- 8000e1c:	699b      	ldr	r3, [r3, #24]
+ 8000e1c:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
  8000e1e:	4a30      	ldr	r2, [pc, #192]	@ (8000ee0 <SystemClock_Config+0xf0>)
- 8000e20:	f443 4340 	orr.w	r3, r3, #49152	@ 0xc000
- 8000e24:	6193      	str	r3, [r2, #24]
+ 8000e20:	f023 0301 	bic.w	r3, r3, #1
+ 8000e24:	62d3      	str	r3, [r2, #44]	@ 0x2c
  8000e26:	4b2e      	ldr	r3, [pc, #184]	@ (8000ee0 <SystemClock_Config+0xf0>)
- 8000e28:	699b      	ldr	r3, [r3, #24]
- 8000e2a:	f403 4340 	and.w	r3, r3, #49152	@ 0xc000
+ 8000e28:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 8000e2a:	f003 0301 	and.w	r3, r3, #1
  8000e2e:	603b      	str	r3, [r7, #0]
  8000e30:	4b2c      	ldr	r3, [pc, #176]	@ (8000ee4 <SystemClock_Config+0xf4>)
- 8000e32:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 8000e32:	699b      	ldr	r3, [r3, #24]
  8000e34:	4a2b      	ldr	r2, [pc, #172]	@ (8000ee4 <SystemClock_Config+0xf4>)
- 8000e36:	f043 0301 	orr.w	r3, r3, #1
- 8000e3a:	62d3      	str	r3, [r2, #44]	@ 0x2c
+ 8000e36:	f443 4340 	orr.w	r3, r3, #49152	@ 0xc000
+ 8000e3a:	6193      	str	r3, [r2, #24]
  8000e3c:	4b29      	ldr	r3, [pc, #164]	@ (8000ee4 <SystemClock_Config+0xf4>)
- 8000e3e:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
- 8000e40:	f003 0301 	and.w	r3, r3, #1
+ 8000e3e:	699b      	ldr	r3, [r3, #24]
+ 8000e40:	f403 4340 	and.w	r3, r3, #49152	@ 0xc000
  8000e44:	603b      	str	r3, [r7, #0]
  8000e46:	683b      	ldr	r3, [r7, #0]
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
  8000e48:	bf00      	nop
- 8000e4a:	4b25      	ldr	r3, [pc, #148]	@ (8000ee0 <SystemClock_Config+0xf0>)
+ 8000e4a:	4b26      	ldr	r3, [pc, #152]	@ (8000ee4 <SystemClock_Config+0xf4>)
  8000e4c:	699b      	ldr	r3, [r3, #24]
  8000e4e:	f403 5300 	and.w	r3, r3, #8192	@ 0x2000
  8000e52:	f5b3 5f00 	cmp.w	r3, #8192	@ 0x2000
@@ -1537,8 +1537,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 4;
  8000e6c:	2304      	movs	r3, #4
  8000e6e:	653b      	str	r3, [r7, #80]	@ 0x50
-  RCC_OscInitStruct.PLL.PLLN = 60;
- 8000e70:	233c      	movs	r3, #60	@ 0x3c
+  RCC_OscInitStruct.PLL.PLLN = 50;
+ 8000e70:	2332      	movs	r3, #50	@ 0x32
  8000e72:	657b      	str	r3, [r7, #84]	@ 0x54
   RCC_OscInitStruct.PLL.PLLP = 2;
  8000e74:	2302      	movs	r3, #2
@@ -1599,9 +1599,9 @@ void SystemClock_Config(void)
  8000ebe:	2340      	movs	r3, #64	@ 0x40
  8000ec0:	623b      	str	r3, [r7, #32]
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
  8000ec2:	1d3b      	adds	r3, r7, #4
- 8000ec4:	2104      	movs	r1, #4
+ 8000ec4:	2102      	movs	r1, #2
  8000ec6:	4618      	mov	r0, r3
  8000ec8:	f001 f89e 	bl	8002008 <HAL_RCC_ClockConfig>
  8000ecc:	4603      	mov	r3, r0
@@ -1617,8 +1617,8 @@ void SystemClock_Config(void)
  8000eda:	46bd      	mov	sp, r7
  8000edc:	bd80      	pop	{r7, pc}
  8000ede:	bf00      	nop
- 8000ee0:	58024800 	.word	0x58024800
- 8000ee4:	58000400 	.word	0x58000400
+ 8000ee0:	58000400 	.word	0x58000400
+ 8000ee4:	58024800 	.word	0x58024800
 
 08000ee8 <Error_Handler>:
 /**
