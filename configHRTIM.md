@@ -115,3 +115,27 @@ Ou seja: primeiro inicializa o periferico (`MX_HRTIM_Init`), depois habilita as 
 - `CM7/Core/Inc/stm32h7xx_hal_conf.h`: habilitacao do modulo HRTIM.
 - `CM7/Core/Src/hrtim.c`: periodo, comparadores, dead time e configuracao de saidas.
 - `CM7/Core/Src/main.c`: chamada de init e start do HRTIM.
+
+## 9) Como alterar a forma do PWM (passo a passo)
+
+Se quiser alterar a forma do PWM em runtime, aplique o compare novamente seguindo este fluxo:
+
+1. Crie e zere a estrutura `HRTIM_CompareCfgTypeDef`.
+2. Defina o novo `CompareValue`.
+3. Chame `HAL_HRTIM_WaveformCompareConfig(...)` para a unidade desejada.
+4. Em caso de erro, chame `Error_Handler()`.
+
+Exemplo (alterando o Compare Unit 1 para `0x3E8`):
+
+```c
+HRTIM_CompareCfgTypeDef pCompareCfg = {0};
+pCompareCfg.CompareValue = 0x3E8;
+if (HAL_HRTIM_WaveformCompareConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_COMPAREUNIT_1, &pCompareCfg) != HAL_OK)
+{
+  Error_Handler();
+}
+```
+
+Observacao:
+
+- Para manter o formato de bordas atual (sobe em CMP1 e desce em CMP2), ajuste CMP1 e CMP2 de forma coordenada.
