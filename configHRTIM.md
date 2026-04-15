@@ -70,11 +70,16 @@ No Timer A:
 - Saida TA2:
   - `SetSource = HRTIM_OUTPUTSET_NONE`
   - `ResetSource = HRTIM_OUTPUTRESET_NONE`
+  - Escolha intencional: com `DeadTimeInsertion` habilitado no Timer A, o TA2 e utilizado como complementar do TA1 com insercao de dead time.
 
 Interpretacao da TA1:
 
 - Sobe no compare 1 (10% do periodo) e desce no compare 2 (90% do periodo).
 - Isso gera pulso ativo de 80% do periodo, deslocado dentro do ciclo (de 10% ate 90%).
+
+Interpretacao da TA2:
+
+- Embora esteja com Set/Reset em NONE, ela foi iniciada para operar como saida complementar da TA1 quando a unidade de dead time do Timer A esta ativa.
 
 ## 6) GPIO e clock do periferico
 
