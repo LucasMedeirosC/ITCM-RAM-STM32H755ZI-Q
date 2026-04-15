@@ -1,5 +1,5 @@
-Drivers/STM32H7xx_HAL_Driver/stm32h7xx_hal_pwr.o: \
- C:/Users/lucas/STM32CubeIDE/workspace_1.19.0/h755_teste/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c \
+Core/Src/hrtim.o: ../Core/Src/hrtim.c ../Core/Inc/hrtim.h \
+ ../Core/Inc/main.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -29,6 +29,8 @@ Drivers/STM32H7xx_HAL_Driver/stm32h7xx_hal_pwr.o: \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h \
  ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h
+../Core/Inc/hrtim.h:
+../Core/Inc/main.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:

@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "hrtim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -290,6 +291,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_HRTIM_Init();
   /* USER CODE BEGIN 2 */
 
   Move_Code_To_ITCM();
@@ -297,7 +299,12 @@ int main(void)
   DWT_CycleCounter_Init();
   Benchmark_Sin_Performance();
 
-  float angulo = 0.5f;
+  //float angulo = 0.5f;
+
+  HAL_HRTIM_WaveformOutputStart(&hhrtim, HRTIM_OUTPUT_TA1 | HRTIM_OUTPUT_TA2);
+  HAL_HRTIM_WaveformCounterStart(&hhrtim, HRTIM_TIMERID_TIMER_A);
+  HAL_HRTIM_WaveformCounterStart(&hhrtim, HRTIM_TIMERID_MASTER);
+
 
   /* USER CODE END 2 */
 
@@ -305,12 +312,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    resultado_sin[0] = sin_itcm(angulo);
-    resultado_sin[1] = sinf(angulo);
-    resultado_cos[0] = cos_itcm(angulo);
-    resultado_cos[1] = cosf(angulo);
-
-    angulo += 0.01f;
+//    resultado_sin[0] = sin_itcm(angulo);
+//    resultado_sin[1] = sinf(angulo);
+//    resultado_cos[0] = cos_itcm(angulo);
+//    resultado_cos[1] = cosf(angulo);
+//
+//    angulo += 0.01f;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
