@@ -31,15 +31,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  13 .debug_macro  00038042  00000000  00000000  0000c523  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_line   00008a1e  00000000  00000000  00044565  2**0
+ 14 .debug_line   00008a22  00000000  00000000  00044565  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_str    00171a17  00000000  00000000  0004cf83  2**0
+ 15 .debug_str    00171a17  00000000  00000000  0004cf87  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .comment      00000043  00000000  00000000  001be99a  2**0
+ 16 .comment      00000043  00000000  00000000  001be99e  2**0
                   CONTENTS, READONLY
- 17 .debug_frame  00001a98  00000000  00000000  001be9e0  2**2
+ 17 .debug_frame  00001a98  00000000  00000000  001be9e4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line_str 0000006a  00000000  00000000  001c0478  2**0
+ 18 .debug_line_str 0000006a  00000000  00000000  001c047c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -338,7 +338,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
  810045e:	2101      	movs	r1, #1
  8100460:	480b      	ldr	r0, [pc, #44]	@ (8100490 <main+0xa0>)
  8100462:	f000 fc26 	bl	8100cb2 <HAL_GPIO_TogglePin>
@@ -353,7 +353,7 @@ int main(void)
     HAL_Delay(1000);
  8100478:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  810047c:	f000 f936 	bl	81006ec <HAL_Delay>
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
  8100480:	bf00      	nop
  8100482:	e7ec      	b.n	810045e <main+0x6e>
  8100484:	58024400 	.word	0x58024400

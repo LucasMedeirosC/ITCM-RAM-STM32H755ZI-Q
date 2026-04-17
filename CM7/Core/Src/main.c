@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "hrtim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -87,6 +86,7 @@ static uint8_t sin_lut_ready = 0U;
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
+// CONFIG MEMORIA RAM
 static void DWT_CycleCounter_Init(void);
 static void Benchmark_Sin_Performance(void);
 static void SinLut_Init(void);
@@ -218,6 +218,7 @@ static void Benchmark_Sin_Performance(void)
   benchmark_sink = acc;
 }
 
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -291,19 +292,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_HRTIM_Init();
   /* USER CODE BEGIN 2 */
 
+  // Memoria RAM
   Move_Code_To_ITCM();
   SinLut_Init();
   DWT_CycleCounter_Init();
   Benchmark_Sin_Performance();
-
   float angulo = 0.5f;
 
-  HAL_HRTIM_WaveformOutputStart(&hhrtim, HRTIM_OUTPUT_TA1 | HRTIM_OUTPUT_TA2);
-  HAL_HRTIM_WaveformCounterStart(&hhrtim, HRTIM_TIMERID_TIMER_A);
-  HAL_HRTIM_WaveformCounterStart(&hhrtim, HRTIM_TIMERID_MASTER);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
